@@ -51,5 +51,3 @@ chmod +x install.sh
 📜 Licence
 Projet libre sous MIT.
 `
-
-💡 Si tu veux, je peux aussi te préparer un install.sh optimisé qui installe toutes les dépendances et configure ton environnement automatiquement, pour que ton README et ton script soient parfaitement synchronisés. Veux‑tu que je te le fasse ?
