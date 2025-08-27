@@ -1,10 +1,14 @@
-# 🖥️ SYSTÈME‑ILYÈS
 
-Environnement terminal personnalisé pour automatiser, expérimenter et intégrer des modules IA, rétro et système.
+🖥️ SYSTÈME‑ILYÈS
 
-## 🚀 Fonctionnalités
+Un environnement terminal personnalisé, pensé pour l’automatisation, l’expérimentation et l’intégration de modules IA, rétro et système.  
+Créé pour les passionnés de bidouille, de rétro‑gaming et d’intelligence artificielle.
 
-- 🔍 Scan réseau local
+---
+
+🚀 Fonctionnalités
+
+- 🔍 Scan réseau local avec affichage ASCII
 - 🧬 Modification de ROMs rétro
 - 📡 Flash de modules DVB
 - 🕹️ Lancement d’émulateurs rétro
@@ -12,10 +16,40 @@ Environnement terminal personnalisé pour automatiser, expérimenter et intégre
 - 🧠 Assistant IA multi‑rôle (/dev, /sec, /doc, /flow)
 - 🩺 Module IA médicale (HOLO‑LAB)
 
-## 📦 Installation
+---
 
-```bash
+📦 Installation
+
+`bash
 git clone https://github.com/milyes/SYSTEME-ILYES.git
 cd SYSTEME-ILYES
 chmod +x install.sh
 ./install.sh
+`
+
+---
+
+📸 Aperçu
+
+`
+╔════════════════════════════════╗
+║   SYSTÈME ILYÈS – TERMINAL OS  ║
+╚════════════════════════════════╝
+
+[1] Scanner le réseau
+[2] Modifier une ROM
+[3] Flasher un module DVB
+[4] Lancer un émulateur rétro
+[5] Quitter
+[6] Assistant IA
+[7] Assistant IA multi‑rôle
+[8] Module IA Médicale
+`
+
+---
+
+📜 Licence
+Projet libre sous MIT.
+`
+
+💡 Si tu veux, je peux aussi te préparer un install.sh optimisé qui installe toutes les dépendances et configure ton environnement automatiquement, pour que ton README et ton script soient parfaitement synchronisés. Veux‑tu que je te le fasse ?
