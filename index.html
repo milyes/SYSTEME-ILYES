@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>IA22 Console Web – Terminal Souverain</title>
+  <style>
+    body {
+      background-color: #0f0f0f;
+      color: #00ffcc;
+      font-family: 'Courier New', Courier, monospace;
+      padding: 20px;
+    }
+    h1 {
+      color: #00ffff;
+      text-align: center;
+    }
+    #console {
+      background-color: #1a1a1a;
+      border: 1px solid #00ffcc;
+      padding: 15px;
+      height: 350px;
+      overflow-y: auto;
+      margin-top: 20px;
+    }
+    button {
+      background-color: #00ffcc;
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      font-weight: bold;
+      cursor: pointer;
+      margin: 5px;
+    }
+    button:hover {
+      background-color: #00e6b8;
+    }
+    .module-group {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🧠 IA22 Console Web – Terminal Souverain</h1>
+  <p>Console connectée au backend IA22_PLATFORM. En attente de commandes...</p>
+
+  <div class="module-group">
+    <button onclick="launchAudit()">🔍 Audit .env</button>
+    <button onclick="launchGithubScan()">🔐 Analyse GitHub</button>
+  </div>
+
+  <div class="module-group">
+    <h3>🧠 Assistants IA</h3>
+    <button onclick="activateAssistant('audit')">Assistant Audit</button>
+    <button onclick="activateAssistant('vision')">Assistant Vision</button>
+    <button onclick="activateAssistant('intuition')">Assistant Intuition</button>
+    <button onclick="activateAssistant('referencement')">Assistant Référencement</button>
+  </div>
+
+  <div id="console">
+    <p>[IA22] Initialisation du terminal IA...</p>
+  </div>
+
+  <script>
+    async function launchAudit() {
+      const consoleDiv = document.getElementById('console');
+      consoleDiv.innerHTML += "<p>[IA22] Audit .env en cours...</p>";
+      try {
+        const response = await fetch('/api/audit/env');
+        const data = await response.json();
+        if (data.issues.length === 0) {
+          consoleDiv.innerHTML += "<p>✅ Aucun problème détecté dans le fichier .env.</p>";
+        } else {
+          data.issues.forEach(issue => {
+            consoleDiv.innerHTML += `<p>⚠️ ${issue}</p>`;
+          });
+        }
+        consoleDiv.innerHTML += "<p>[IA22] Audit terminé.</p>";
+      } catch (error) {
+        consoleDiv.innerHTML += `<p>❌ Erreur lors de l’audit : ${error.message}</p>`;
+      }
+    }
+
+    async function launchGithubScan() {
+      const consoleDiv = document.getElementById('console');
+      consoleDiv.innerHTML += "<p>[IA22] Analyse GitHub en cours...</p>";
+      try {
+        const response = await fetch('/api/audit/github');
+        const data = await response.json();
+        data.results.forEach(result => {
+          consoleDiv.innerHTML += `<p>🔍 ${result}</p>`;
+        });
+        consoleDiv.innerHTML += "<p>[IA22] Analyse GitHub terminée.</p>";
+      } catch (error) {
+        consoleDiv.innerHTML += `<p>❌ Erreur lors de l’analyse GitHub : ${error.message}</p>`;
+      }
+    }
+
+    async function activateAssistant(type) {
+      const consoleDiv = document.getElementById('console');
+      consoleDiv.innerHTML += `<p>[IA22] Activation de l’assistant ${type}...</p>`;
+      try {
+        const response = await fetch(`/api/assistant/${type}`);
+        const data = await response.json();
+        consoleDiv.innerHTML += `<p>🤖 ${data.message}</p>`;
+      } catch (error) {
+        consoleDiv.innerHTML += `<p>❌ Erreur lors de l’activation : ${error.message}</p>`;
+      }
+    }
+  </script>
+
+</body>
+</html>
