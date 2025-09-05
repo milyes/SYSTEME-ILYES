@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commandes IA Disponibles</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f7f6;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+        }
+        .module-section {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+        }
+        .module-section:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        h2 {
+            color: #34495e;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            border-left: 5px solid #3498db;
+            padding-left: 10px;
+        }
+        .command-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .command-card {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .command-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .command-card h3 {
+            color: #2980b9;
+            margin-top: 0;
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+        .command-card p {
+            font-size: 0.95em;
+            line-height: 1.5;
+            color: #555;
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+        .command-card .syntax {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #e0e6e7;
+            padding: 8px 10px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: #c0392b;
+            word-break: break-all;
+        }
+        .command-card .arguments {
+            font-size: 0.85em;
+            color: #7f8c8d;
+            margin-top: 10px;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            h2 {
+                font-size: 1.5em;
+            }
+            .container {
+                padding: 20px;
+            }
+        }
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8em;
+            }
+            h2 {
+                font-size: 1.3em;
+            }
+            .command-card {
+                padding: 15px;
+            }
+            .command-card h3 {
+                font-size: 1.2em;
+            }
+            .command-card p {
+                font-size: 0.9em;
+            }
+            .command-card .syntax {
+                font-size: 0.85em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Commandes IA Disponibles</h1>
+
+        <div class="module-section">
+            <h2>Module de Traitement du Langage Naturel (TLN)</h2>
+            <div class="command-grid">
+                <div class="command-card">
+                    <h3>Analyse de Sentiment</h3>
+                    <p>Détecte le sentiment (positif, négatif, neutre) d'un bloc de texte donné.</p>
+                    <div class="syntax">/tln sentiment "Votre texte ici"</div>
+                    <div class="arguments">Arguments: texte (chaîne de caractères)</div>
+                </div>
+                <div class="command-card">
+                    <h3>Résumé de Texte</h3>
+                    <p>Génère un résumé concis d'un document ou d'un paragraphe long.</p>
+                    <div class="syntax">/tln résumer "Votre document long..." [longueur_souhaitée]</div>
+                    <div class="arguments">Arguments: texte (chaîne de caractères), longueur_souhaitée (optionnel, nombre de phrases/mots)</div>
+                </div>
+                <div class="command-card">
+                    <h3>Traduction</h3>
+                    <p>Traduit un texte d'une langue source vers une langue cible.</p>
+                    <div class="syntax">/tln traduire "Hello" en français</div>
+                    <div class="arguments">Arguments: texte (chaîne de caractères), langue_cible (chaîne de caractères), langue_source (optionnel)</div>
+                </div>
+                <div class="command-card">
+                    <h3>Extraction d'Entités Nommées</h3>
+                    <p>Identifie et extrait les entités nommées (personnes, lieux, organisations) d'un texte.</p>
+                    <div class="syntax">/tln entités "Pierre Dupont travaille à Paris chez Google."</div>
+                    <div class="arguments">Arguments: texte (chaîne de caractères)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="module-section">
+            <h2>Module de Vision par Ordinateur (VO)</h2>
+            <div class="command-grid">
+                <div class="command-card">
+                    <h3>Description d'Image</h3>
+                    <p>Génère une description textuelle du contenu d'une image.</p>
+                    <div class="syntax">/vo décrire [url_image]</div>
+                    <div class="arguments">Arguments: url_image (chaîne de caractères) ou image téléchargée</div>
+                </div>
+                <div class="command-card">
+                    <h3>Détection d'Objets</h3>
+                    <p>Identifie et localise les objets spécifiques dans une image ou une vidéo.</p>
+                    <div class="syntax">/vo détecter [url_image] "chat", "chien"</div>
+                    <div class="arguments">Arguments: url_image (chaîne de caractères), objets_à_détecter (liste, optionnel)</div>
+                </div>
+                <div class="command-card">
+                    <h3>Reconnaissance Faciale</h3>
+                    <p>Détecte et identifie les visages présents dans une image.</p>
+                    <div class="syntax">/vo visage [url_image]</div>
+                    <div class="arguments">Arguments: url_image (chaîne de caractères)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="module-section">
+            <h2>Module de Génération de Contenu</h2>
+            <div class="command-grid">
+                <div class="command-card">
+                    <h3>Génération de Texte</h3>
+                    <p>Crée du texte cohérent et pertinent basé sur une invite donnée.</p>
+                    <div class="syntax">/generer texte "Écris une courte histoire sur un dragon et un chevalier."</div>
+                    <div class="arguments">Arguments: invite (chaîne de caractères), longueur_max (optionnel)</div>
+                </div>
+                <div class="command-card">
+                    <h3>Génération d'Image</h3>
+                    <p>Crée une image à partir d'une description textuelle.</p>
+                    <div class="syntax">/generer image "Un chat astronaute jouant de la guitare sur la lune."</div>
+                    <div class="arguments">Arguments: description (chaîne de caractères), style (optionnel)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="module-section">
+            <h2>Module de Recommandation</h2>
+            <div class="command-grid">
+                <div class="command-card">
+                    <h3>Recommander Produit</h3>
+                    <p>Suggère des produits basés sur l'historique de l'utilisateur ou des critères spécifiques.</p>
+                    <div class="syntax">/reco produit [id_utilisateur] [catégorie]</div>
+                    <div class="arguments">Arguments: id_utilisateur (nombre), catégorie (chaîne de caractères, optionnel)</div>
+                </div>
+                <div class="command-card">
+                    <h3>Recommander Article</h3>
+                    <p>Propose des articles de blog ou d'actualité pertinents.</p>
+                    <div class="syntax">/reco article [mots_clés]</div>
+                    <div class="arguments">Arguments: mots_clés (liste, optionnel)</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
