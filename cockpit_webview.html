@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>SYSTEMEOSIA | Cockpit WebView</title>
+  <style>
+    body {
+      background-color: #0f0f0f;
+      color: #00ffcc;
+      font-family: 'Courier New', Courier, monospace;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      color: #00ffff;
+      margin-bottom: 10px;
+    }
+    .session {
+      border: 1px solid #333;
+      padding: 15px;
+      margin-bottom: 20px;
+      background-color: #1a1a1a;
+    }
+    .directive {
+      font-weight: bold;
+      color: #66ff66;
+    }
+    .timestamp, .hash, .signature {
+      font-size: 0.9em;
+      color: #999;
+    }
+    .summary {
+      margin-top: 10px;
+      color: #ccc;
+    }
+    .qr {
+      margin-top: 10px;
+    }
+    select {
+      background-color: #111;
+      color: #00ffcc;
+      border: 1px solid #333;
+      padding: 5px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🧠 SYSTEMEOSIA | Cockpit WebView</h1>
+
+  <label for="filter">Filtrer par directive :</label>
+  <select id="filter">
+    <option value="all">Toutes</option>
+    <option value="#001_ANALYTIQUE">#001 – Analytique</option>
+    <option value="#002_STRATEGIQUE">#002 – Stratégique</option>
+    <option value="#003_CREATIF">#003 – Créatif</option>
+    <option value="#004_VISIONNAIRE">#004 – Visionnaire</option>
+    <option value="#005_PROVOCATEUR">#005 – Provocateur</option>
+  </select>
+
+  <div id="session-container">
+    <!-- Les sessions seront injectées ici -->
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script>
+    const sessions = [
+      {
+        directive: "#001_ANALYTIQUE",
+        timestamp: "2025-09-07T04:43:00Z",
+        hash: "IA22_3d9c1e7a",
+        signature: "SIG-IA22-a1b2c3d4e5f6g7h8",
+        summary: [
+          "⚠️ Risque détecté : L'automatisation peut introduire des vulnérabilités invisibles.",
+          "🔍 Segment dense : Nécessité d'une supervision hybride."
+        ]
+      },
+      {
+        directive: "#003_CREATIF",
+        timestamp: "2025-09-07T04:45:00Z",
+        hash: "IA22_7f8e2a1c",
+        signature: "SIG-IA22-c9d8e7f6a5b4c3d2",
+        summary: [
+          "💡 Et si cette contrainte devenait un levier ?",
+          "💡 Fusionner deux idées opposées pour créer une troisième voie."
+        ]
+      }
+    ];
+
+    function renderSessions(filter) {
+      const container = document.getElementById('session-container');
+      container.innerHTML = "";
+
+      sessions
+        .filter(s => filter === "all" || s.directive === filter)
+        .forEach(s => {
+          const div = document.createElement("div");
+          div.className = "session";
+          div.innerHTML = `
+            <div class="directive">${s.directive}</div>
+            <div class="timestamp">Horodatage : ${s.timestamp}</div>
+            <div class="hash">Hash IA22 : ${s.hash}</div>
+            <div class="signature">Signature : ${s.signature}</div>
+            <div class="summary">
+              <strong>Résumé Cognitif :</strong><br>
+              ${s.summary.map(line => `<div>• ${line}</div>`).join("")}
+            </div>
+            <div class="qr" id="qr-${s.hash}"></div>
+          `;
+          container.appendChild(div);
+          new QRCode(document.getElementById(`qr-${s.hash}`), {
+            text: s.signature,
+            width: 100,
+            height: 100,
+            colorDark: "#00ffcc",
+            colorLight: "#0f0f0f",
+            correctLevel: QRCode.CorrectLevel.H
+          });
+        });
+    }
+
+    document.getElementById('filter').addEventListener('change', (e) => {
+      renderSessions(e.target.value);
+    });
+
+    renderSessions("all");
+  </script>
+
+</body>
+</html>
