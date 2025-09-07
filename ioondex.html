@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centre de Commandes SYSTEMEOSIA</title>
+    <style>
+        /* Styles de base */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1a237e;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+        }
+
+        /* Conteneur des cartes de commande */
+        .command-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        /* Style des cartes individuelles */
+        .command-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            flex: 1 1 300px; /* Base de flexbox pour la réactivité */
+            box-sizing: border-box;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .command-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .command-card h2 {
+            margin-top: 0;
+            color: #007bff;
+            font-size: 1.5em;
+            word-wrap: break-word; /* Empêche le débordement sur les petits écrans */
+        }
+        
+        .command-card p {
+            font-size: 1em;
+            color: #555;
+        }
+
+        /* Style pour les petits écrans */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+            .command-card {
+                flex-basis: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Centre de Commandes IA de SYSTEMEOSIA</h1>
+        
+        <div class="command-grid">
+            
+            <div class="command-card">
+                <h2>SYSTEMEOSIA:init</h2>
+                <p>Initialise le moteur IA et charge les configurations par défaut.</p>
+            </div>
+            
+            <div class="command-card">
+                <h2>SYSTEMEOSIA:train &lt;model_id&gt;</h2>
+                <p>Démarre le processus d'entraînement pour le modèle spécifié.</p>
+            </div>
+
+            <div class="command-card">
+                <h2>SYSTEMEOSIA:predict &lt;input_data&gt;</h2>
+                <p>Exécute une prédiction en utilisant le modèle IA actif sur les données fournies.</p>
+            </div>
+
+            <div class="command-card">
+                <h2>SYSTEMEOSIA:status</h2>
+                <p>Affiche l'état actuel du système, y compris l'utilisation des ressources et le statut du modèle.</p>
+            </div>
+
+            <div class="command-card">
+                <h2>SYSTEMEOSIA:list_models</h2>
+                <p>Énumère tous les modèles IA disponibles dans le référentiel.</p>
+            </div>
+
+            <div class="command-card">
+                <h2>SYSTEMEOSIA:load_model &lt;model_id&gt;</h2>
+                <p>Charge un modèle IA spécifique depuis le disque en mémoire pour une utilisation future.</p>
+            </div>
+
+            <div class="command-card">
+                <h2>SYSTEMEOSIA:help</h2>
+                <p>Fournit de l'aide et des informations d'utilisation pour toutes les commandes.</p>
+            </div>
+
+            <div class="command-card">
+                <h2>SYSTEMEOSIA:shutdown</h2>
+                <p>Arrête proprement le moteur IA et libère les ressources système.</p>
+            </div>
+            
+        </div>
+    </div>
+
+</body>
+</html>
