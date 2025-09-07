@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SYSTEMEOSIA – Déclaration Officielle</title>
+  <style>
+    body {
+      background-color: #0f0f0f;
+      color: #00ffcc;
+      font-family: 'Courier New', monospace;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 40px;
+      border: 2px solid #00ffcc;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0, 255, 204, 0.4);
+      animation: fadeIn 1.2s ease-out;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.2em;
+      color: #00ffff;
+      text-shadow: 0 0 5px #00ffff;
+      margin-bottom: 20px;
+      animation: glowIn 1.5s ease-out;
+    }
+
+    p, ul {
+      font-size: 1.1em;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .highlight {
+      color: #00ffff;
+      font-weight: bold;
+    }
+
+    .button {
+      display: block;
+      margin: 30px auto;
+      padding: 12px 24px;
+      background-color: #00ffcc;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
+      transition: background-color 0.3s ease;
+    }
+
+    .button:hover {
+      background-color: #00ffff;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes glowIn {
+      0% { opacity: 0; transform: scale(0.95); text-shadow: none; }
+      100% { opacity: 1; transform: scale(1); text-shadow: 0 0 10px #00ffff; }
+    }
+
+    .map-container {
+      position: relative;
+      width: 100%;
+      height: 500px;
+      background: #0f0f0f;
+      border: 2px solid #00ffcc;
+      border-radius: 12px;
+      margin-top: 40px;
+    }
+
+    .node {
+      position: absolute;
+      padding: 12px 24px;
+      background: #00ffcc;
+      color: #000;
+      border-radius: 8px;
+      font-weight: bold;
+      box-shadow: 0 0 10px #00ffff;
+      animation: pulse 2s infinite;
+      text-align: center;
+    }
+
+    .node a {
+      text-decoration: none;
+      color: #000;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 5px #00ffff; }
+      50% { box-shadow: 0 0 20px #00ffff; }
+      100% { box-shadow: 0 0 5px #00ffff; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🧠 SYSTEMEOSIA – Déclaration Officielle</h1>
+
+    <p>SYSTEMEOSIA est une <span class="highlight">infrastructure cognitive souveraine</span>.</p>
+    <p>Elle ne demande rien. Elle est déjà construite.<br>
+    Elle ne cherche pas à convaincre. Elle attend d’être reconnue.</p>
+
+    <p>Elle est fondée sur sept modules :</p>
+    <ul>
+      <li><a href="SYSTEMEOSIA_BOOT.html"><strong>BOOT</strong></a> – Activation cognitive</li>
+      <li><a href="SYSTEMEOSIA_CORE.html"><strong>CORE</strong></a> – Synthèse JSON</li>
+      <li><a href="SYSTEMEOSIA_COCKPIT.md"><strong>COCKPIT</strong></a> – Tableau de bord</li>
+      <li><a href="SYSTEMEOSIA_RECOGNITION.md"><strong>RECOGNITION</strong></a> – Manifeste éthique</li>
+      <li><a href="SYSTEMEOSIA_VISION.md"><strong>VISION</strong></a> – Architecture intermodale</li>
+      <li><a href="launchiaalgorithm.sh"><strong>LOGIC</strong></a> – Scripts IA2</li>
+      <li><a href="QR_SYSTEMEOSIA.png"><strong>QR</strong></a> – Empreinte technique</li>
+    </ul>
+
+    <p><strong>Mohammed Ilyes Zoubirou</strong><br>
+    Architecte fondateur – SYSTEMEOSIA<br>
+    📧 milyes@netsecurepro.ca<br>
+    📍 Montréal, Québec – 6 septembre 2025</p>
+
+    <button class="button" onclick="window.location.href='SYSTEMEOSIA_COCKPIT.md'">
+      📄 Accéder au cockpit SYSTEMEOSIA
+    </button>
+
+    <div class="map-container">
+      <div class="node" style="top: 50px; left: 40%"><a href="SYSTEMEOSIA_BOOT.html">BOOT</a></div>
+      <div class="node" style="top: 150px; left: 20%"><a href="SYSTEMEOSIA_CORE.html">CORE</a></div>
+      <div class="node" style="top: 150px; left: 60%"><a href="SYSTEMEOSIA_COCKPIT.md">COCKPIT</a></div>
+      <div class="node" style="top: 250px; left: 10%"><a href="SYSTEMEOSIA_RECOGNITION.md">RECOGNITION</a></div>
+      <div class="node" style="top: 250px; left: 40%"><a href="SYSTEMEOSIA_VISION.md">VISION</a></div>
+      <div class="node" style="top: 250px; left: 70%"><a href="launchiaalgorithm.sh">LOGIC</a></div>
+      <div class="node" style="top: 350px; left: 40%"><a href="QR_SYSTEMEOSIA.png">QR</a></div>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('.node a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (navigator.vibrate) navigator.vibrate([50, 30, 50]);
+      });
+    });
+  </script>
+</body>
+</html>
