@@ -1,53 +1,30 @@
+# SYSTEMEOSIAILYES
 
-🖥️ SYSTÈME‑ILYÈS
+**SYSTEMEOSIAILYES — Architecture cognitive souveraine**  
+Auteur : Zoubirou Mohammed Ilyes (milyes)  
+ORCID : https://orcid.org/0009-0007-7571-3178
 
-Un environnement terminal personnalisé, pensé pour l’automatisation, l’expérimentation et l’intégration de modules IA, rétro et système.  
-Créé pour les passionnés de bidouille, de rétro‑gaming et d’intelligence artificielle.
+## But
+Fournir un socle distribué pour la présence cognitive : capsules versionnées (texte, audio, visuel), logs d’éthique, et interfaces multi-plateformes pour diffusion et archivage.
 
----
+## Arborescence recommandée
+```
+SYSTEMEOSIAILYES/
+│── README.md
+│── LICENSE
+│── ethics/
+│    └── voice_cloning.md
+│── capsules/
+│    ├── 001_intro.txt
+│    └── 001_intro.json
+│── visuels/
+│    └── banner.svg
+│── logs/
+│    └── tech-log.md
+```
 
-🚀 Fonctionnalités
+## Contribution
+1. Fork → 2. Branch → 3. PR avec description et métadonnées → 4. Review
 
-- 🔍 Scan réseau local avec affichage ASCII
-- 🧬 Modification de ROMs rétro
-- 📡 Flash de modules DVB
-- 🕹️ Lancement d’émulateurs rétro
-- 🤖 Assistant IA intégré
-- 🧠 Assistant IA multi‑rôle (/dev, /sec, /doc, /flow)
-- 🩺 Module IA médicale (HOLO‑LAB)
-
----
-
-📦 Installation
-
-`bash
-git clone https://github.com/milyes/SYSTEME-ILYES.git
-cd SYSTEME-ILYES
-chmod +x install.sh
-./install.sh
-`
-
----
-
-📸 Aperçu
-
-`
-╔════════════════════════════════╗
-║   SYSTÈME ILYÈS – TERMINAL OS  ║
-╚════════════════════════════════╝
-
-[1] Scanner le réseau
-[2] Modifier une ROM
-[3] Flasher un module DVB
-[4] Lancer un émulateur rétro
-[5] Quitter
-[6] Assistant IA
-[7] Assistant IA multi‑rôle
-[8] Module IA Médicale
-`
-
----
-
-📜 Licence
-Projet libre sous MIT.
-`
+## Licence
+MIT pour le code. Capsules créatives : CC-BY-SA.
