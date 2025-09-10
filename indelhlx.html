@@ -69,6 +69,58 @@
         }
     </style>
 </head>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const terminal = document.body;
+  const prompt = document.createElement("div");
+  prompt.innerHTML = 'SYS | > <span id="input" contenteditable="true" style="outline:none;"></span>';
+  prompt.style.fontFamily = "monospace";
+  prompt.style.color = "#00ff00";
+  terminal.appendChild(prompt);
+
+  const input = document.getElementById("input");
+  input.focus();
+
+  input.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const command = input.innerText.trim().toLowerCase();
+      const output = document.createElement("div");
+      output.style.fontFamily = "monospace";
+      output.style.color = "#ffffff";
+
+      switch (command) {
+        case "help":
+          output.innerText = "Commandes disponibles : help, boot, holo-lab, systeme_os_ia, clear";
+          break;
+        case "boot":
+          output.innerText = "🔁 Initialisation du noyau IA22_LOGIC...";
+          break;
+        case "holo-lab":
+          output.innerText = "🧬 Module médical HOLO-LAB activé.";
+          break;
+        case "systeme_os_ia":
+          output.innerHTML = '🗺️ Carte interactive : <a href="https://milyes.github.io/SYSTEME_OS_IA/systeme_os_ia.html" target="_blank">Ouvrir</a>';
+          break;
+        case "clear":
+          document.body.innerHTML = "";
+          location.reload();
+          return;
+        default:
+          output.innerText = `Commande inconnue : "${command}"`;
+      }
+
+      terminal.appendChild(output);
+      const newPrompt = prompt.cloneNode(true);
+      terminal.appendChild(newPrompt);
+      newPrompt.querySelector("#input").focus();
+    }
+  });
+});
+</script>
+
+
+    
 <body>
 
     <div id="terminal-output"></div>
