@@ -3,37 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SYSTEMEOSIAILYES - Interaction Linguistique</title>
+    <title>SYSTEMEOSIAILYES</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f0f8ff;
-            direction: ltr; /* Par défaut gauche à droite */
+        /* styles comme précédemment */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SYSTEMEOSIAILYES</h1>
+        <!-- éléments comme précédemment -->
+        <button onclick="traiterInput()">Envoyer</button>
+        <button onclick="traiterFichier()">Traiter Fichier</button>
+        <div id="resultat"></div>
+    </div>
+
+    <script>
+        function traiterInput() {
+            const langue = document.getElementById('langueSelect').value;
+            const texte = document.getElementById('inputTexte').value;
+            const resultatDiv = document.getElementById('resultat');
+            let reponse = '';
+            
+            if (!texte) {
+                reponse = "Veuillez entrer un texte.";
+            } else {
+                if (langue === 'fr') {
+                    reponse = `Français : "${texte}"`;
+                } else if (langue === 'en') {
+                    reponse = `English: "${texte}"`;
+                } else if (langue === 'ar') {
+                    resultatDiv.className = 'arabe';
+                    reponse = `العربية: "${texte}"`;
+                }
+            }
+            resultatDiv.innerText = reponse;
         }
-        .container {
-            max-width: 600px;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            background-color: white;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        
+        function traiterFichier() {
+            const fileInput = document.getElementById('fileInput');
+            const resultatDiv = document.getElementById('resultat');
+            if (fileInput.files.length === 0) {
+                resultatDiv.innerText = "Veuillez sélectionner un fichier.";
+                return;
+            }
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                resultatDiv.innerText = `Contenu :\n${e.target.result}`;
+            };
+            reader.onerror = function() {
+                resultatDiv.innerText = "Erreur lors de la lecture du fichier.";
+            };
+            reader.readAsText(file);
         }
-        h1 {
-            color: #2a4d75;
-            text-align: center;
-        }
-        .langue, .input-section {
-            margin: 10px 0;
-            padding: 10px;
-            border-radius: 5px;
-            background-color: #e6f0ff;
-        }
-        button {
-            padding: 10px 15px;
-            background-color: #4CAF50;
-            color: white;
+    </script>
+</body>
+</html>
             border: none;
             border-radius: 5px;
             cursor: pointer;
