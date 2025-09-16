@@ -5,139 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SYSTEMEOSIAILYES</title>
     <style>
-        /* styles comme précédemment */
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f0f8ff; }
+        .container { max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px; background-color: white; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1 { color: #2a4d75; text-align: center; }
+        .section { margin: 10px 0; padding: 10px; border-radius: 5px; background-color: #e6f0ff; }
+        button { padding: 10px 15px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; margin: 5px; }
+        button:hover { background-color: #45a049; }
+        input[type="text"], select { width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ccc; border-radius: 5px; }
+        .arabe { direction: rtl; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>SYSTEMEOSIAILYES</h1>
-        <!-- éléments comme précédemment -->
-        <button onclick="traiterInput()">Envoyer</button>
-        <button onclick="traiterFichier()">Traiter Fichier</button>
+        <p>Interaction linguistique (français, anglais, arabe).</p>
+        <div class="section">
+            <label>Langue :</label>
+            <select id="langue">
+                <option value="fr">Français</option>
+                <option value="en">Anglais</option>
+                <option value="ar">Arabe</option>
+            </select>
+        </div>
+        <div class="section">
+            <label>Texte :</label>
+            <input type="text" id="texte" placeholder="Tapez ici...">
+        </div>
+        <div class="section">
+            <label>Fichier texte :</label>
+            <input type="file" id="fichier" accept=".txt">
+        </div>
+        <button onclick="traiter()">Envoyer Texte</button>
+        <button onclick="lireFichier()">Traiter Fichier</button>
         <div id="resultat"></div>
     </div>
-
     <script>
-        function traiterInput() {
-            const langue = document.getElementById('langueSelect').value;
-            const texte = document.getElementById('inputTexte').value;
-            const resultatDiv = document.getElementById('resultat');
-            let reponse = '';
-            
-            if (!texte) {
-                reponse = "Veuillez entrer un texte.";
-            } else {
-                if (langue === 'fr') {
-                    reponse = `Français : "${texte}"`;
-                } else if (langue === 'en') {
-                    reponse = `English: "${texte}"`;
-                } else if (langue === 'ar') {
-                    resultatDiv.className = 'arabe';
-                    reponse = `العربية: "${texte}"`;
-                }
-            }
-            resultatDiv.innerText = reponse;
+        function traiter() {
+            const langue = document.getElementById('langue').value;
+            const texte = document.getElementById('texte').value;
+            const res = document.getElementById('resultat');
+            let msg = langue === 'fr' ? `Français: ${texte}` : langue === 'en' ? `English: ${texte}` : `العربية: ${texte}`;
+            if(langue==='ar') res.className='arabe'; else res.className='';
+            res.innerText = msg || "Entrez un texte.";
         }
-        
-        function traiterFichier() {
-            const fileInput = document.getElementById('fileInput');
-            const resultatDiv = document.getElementById('resultat');
-            if (fileInput.files.length === 0) {
-                resultatDiv.innerText = "Veuillez sélectionner un fichier.";
-                return;
-            }
-            const file = fileInput.files[0];
+        function lireFichier() {
+            const fichier = document.getElementById('fichier').files[0];
+            const res = document.getElementById('resultat');
+            if(!fichier) { res.innerText = "Sélectionnez un fichier."; return; }
             const reader = new FileReader();
-            reader.onload = function(e) {
-                resultatDiv.innerText = `Contenu :\n${e.target.result}`;
-            };
-            reader.onerror = function() {
-                resultatDiv.innerText = "Erreur lors de la lecture du fichier.";
-            };
-            reader.readAsText(file);
+            reader.onload = e => res.innerText = `Contenu:\n${e.target.result}`;
+            reader.onerror = () => res.innerText = "Erreur de lecture.";
+            reader.readAsText(fichier);
         }
     </script>
 </body>
 </html>
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 5px;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        input[type="text"], select, textarea {
-            width: 100%;
-            padding: 8px;
-            margin: 5px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-        #resultat {
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #eef;
-            border-radius: 5px;
-        }
-        .arabe {
-            direction: rtl; /* Droite à gauche pour arabe */
-            font-family: 'Arial', 'Tahoma', sans-serif;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>SYSTEMEOSIAILYES</h1>
-        <p>Interaction linguistique pour améliorer votre français, anglais et arabe.</p>
-        
-        <div class="langue">
-            <label>Choisissez une langue :</label>
-            <select id="langueSelect">
-                <option value="fr">Français</option>
-                <option value="en">Anglais</option>
-                <option value="ar">العربية (Arabe)</option>
-            </select>
-        </div>
-        
-        <div class="input-section">
-            <label>Entrez une phrase ou question :</label>
-            <input type="text" id="inputTexte" placeholder="Tapez ici...">
-        </div>
-        
-        <div class="input-section">
-            <label>Ou upload un fichier texte :</label>
-            <input type="file" id="fileInput" accept=".txt">
-        </div>
-        
-        <button onclick="traiterInput()">Envoyer</button>
-        <button onclick="traiterFichier()">Traiter Fichier</button>
-        
-        <div id="resultat"></div>
-    </div>
-
-    <script>
-        function traiterInput() {
-            const langue = document.getElementById('langueSelect').value;
-            const texte = document.getElementById('inputTexte').value;
-            const resultatDiv = document.getElementById('resultat');
-            let reponse = '';
-            
-            if (langue === 'fr') {
-                reponse = `Vous avez choisi le français. Texte : "${texte}"`;
-            } else if (langue === 'en') {
-                reponse = `You chose English. Text: "${texte}"`;
-            } else if (langue === 'ar') {
-                resultatDiv.className = 'arabe';
-                reponse = `لقد اخترت العربية. النص: "${texte}"`;
-            }
-            
-            resultatDiv.innerText = reponse;
-        }
-        
-        function traiterFichier() {
-            const fileInput = document.getElementById('fileInput');
-            const resultatDiv = document.getElementById('resultat');
-            if (fileInput.files.length > 0) {
-                const file = fileInput
