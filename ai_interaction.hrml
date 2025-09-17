@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AI Studio Code — Interface</title>
+  <style>
+    :root{
+      --bg:#0f1724; --card:#0b1220; --accent:#06b6d4; --muted:#94a3b8; --glass: rgba(255,255,255,0.03);
+      color-scheme: dark;
+    }
+    body{
+      margin:0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg,#071022 0%, #071826 100%);
+      color:#e6eef6; line-height:1.4;
+      padding:26px;
+    }
+    .container{max-width:1100px;margin:0 auto;}
+    header{display:flex;gap:16px;align-items:center;margin-bottom:18px}
+    header h1{font-size:20px;margin:0}
+    header p{margin:0;color:var(--muted);font-size:13px}
+    .row{display:flex;gap:18px;flex-wrap:wrap}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03);
+      padding:16px;border-radius:12px;box-shadow:0 6px 24px rgba(2,6,23,0.6);flex:1 1 320px;min-width:280px}
+    label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+    textarea,input,select{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+    button{background:var(--accent);border:0;color:#062024;padding:8px 12px;border-radius:8px;cursor:pointer;font-weight:600}
+    .muted{color:var(--muted);font-size:13px}
+    .result{background:var(--glass);padding:12px;border-radius:8px;margin-top:10px;white-space:pre-wrap;font-family: ui-monospace, SFMono-Regular, Menlo, monospace}
+    .small{font-size:13px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+    .img-preview{max-width:100%;border-radius:8px;margin-top:8px}
+    .config{display:flex;gap:8px;align-items:center}
+    .footer{margin-top:18px;color:var(--muted);font-size:13px}
+    .top-note{background:rgba(6,182,212,0.08);color:var(--accent);padding:10px;border-radius:8px;border:1px solid rgba(6,182,212,0.08);margin-bottom:12px}
+    .flex{display:flex;gap:8px;align-items:center}
+    .chip{background:rgba(255,255,255,0.03);padding:6px 8px;border-radius:999px;font-size:13px;color:var(--muted)}
+    .controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .kbd{background:#061726;padding:4px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.02);}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <h1>AI Studio Code — Interface de test</h1>
+        <p>Interface frontend autonome (mode mock) — peut pointer vers un backend réel via la configuration.</p>
+      </div>
+      <div style="margin-left:auto;text-align:right">
+        <div class="chip">NetSecurePro — AI Studio</div>
+        <div class="muted" style="margin-top:6px">Auteur : Zoubirou Mohammed Ilyes</div>
+      </div>
+    </header>
+
+    <div class="top-note">
+      Mode d'emploi rapide : configure l'URL du backend pour appels réels (ex: <span class="kbd">https://ton-serveur/api</span>). Si non configuré, la page utilisera des implémentations locales simulées (mock).
+    </div>
+
+    <!-- Configuration -->
+    <div class="row" style="margin-bottom:12px">
+      <div class="card" style="flex:1 1 100%">
+        <label>URL backend (laisser vide → mode mock)</label>
+        <div class="config">
+          <input id="backendUrl" placeholder="https://exemple.com/api" />
+          <input id="backendKey" placeholder="Clé API / Token (optionnel)" />
+          <button id="saveConfig">Enregistrer</button>
+          <button id="clearConfig" style="background:#334155;color:white">Effacer</button>
+        </div>
+        <div class="muted" style="margin-top:8px">Exemples d'endpoints supportés par le frontend : <span class="kbd">/tln/sentiment</span>, <span class="kbd">/tln/summary</span>, <span class="kbd">/vo/describe</span>, <span class="kbd">/generate/text</span></div>
+      </div>
+    </div>
+
+    <!-- TLN -->
+    <div class="row">
+      <div class="card">
+        <h3>Traitement du Langage Naturel (TLN)</h3>
+        <div style="margin-top:8px">
+          <label for="tlnText">Texte</label>
+          <textarea id="tlnText" rows="6" placeholder="Colle ton texte ici..."></textarea>
+          <div class="controls">
+            <select id="tlnAction">
+              <option value="sentiment">Analyse de sentiment</option>
+              <option value="summary">Résumé</option>
+              <option value="translate">Traduction</option>
+              <option value="ner">Extraction d'entités (NER)</option>
+            </select>
+            <input id="tlnOpt" placeholder="Option (ex: fr en, 2 phrases)" style="width:160px"/>
+            <button id="tlnRun">Exécuter</button>
+            <button id="tlnClear" style="background:#334155">Effacer</button>
+          </div>
+          <div id="tlnResult" class="result" aria-live="polite">Résultat...</div>
+        </div>
+      </div>
+
+      <!-- Vision -->
+      <div class="card">
+        <h3>Vision par Ordinateur</h3>
+        <label>Image (upload)</label>
+        <input type="file" id="imgFile" accept="image/*" />
+        <img id="imgPreview" class="img-preview" style="display:none" alt="aperçu image" />
+        <div class="controls" style="margin-top:8px">
+          <select id="voAction">
+            <option value="describe">Décrire l'image</option>
+            <option value="objects">Détection d'objets (mock)</option>
+            <option value="faces">Détection visage (mock)</option>
+          </select>
+          <button id="voRun">Exécuter</button>
+          <button id="voClear" style="background:#334155">Effacer</button>
+        </div>
+        <div id="voResult" class="result">Résultat...</div>
+      </div>
+    </div>
+
+    <!-- Génération + Reco -->
+    <div class="row" style="margin-top:12px">
+      <div class="card">
+        <h3>Génération de contenu</h3>
+        <label>Prompt</label>
+        <textarea id="genPrompt" rows="4" placeholder="Demande de génération..."></textarea>
+        <div class="controls">
+          <select id="genAction">
+            <option value="text">Générer texte</option>
+            <option value="image">Générer image (mock)</option>
+          </select>
+          <input id="genOpt" placeholder="Option (longueur, style...)" style="width:160px"/>
+          <button id="genRun">Générer</button>
+          <button id="genClear" style="background:#334155">Effacer</button>
+        </div>
+        <div id="genResult" class="result">Résultat...</div>
+      </div>
+
+      <div class="card">
+        <h3>Système de recommandation</h3>
+        <label>Contexte / requête</label>
+        <input id="recQuery" placeholder="ex: smartphone pas cher, article sur sécurité" />
+        <div class="controls">
+          <select id="recAction">
+            <option value="product">Recommander un produit</option>
+            <option value="article">Recommander un article</option>
+          </select>
+          <button id="recRun">Recommander</button>
+        </div>
+        <div id="recResult" class="result">Résultat...</div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="muted">Notes techniques : Ce fichier est prévu pour tests & prototypage. Pour production, connecter un backend sécurisé, ajouter authentification, contrôle des quotas, validation approfondie des entrées, et logging.</div>
+    </div>
+  </div>
+
+  <script>
+    // --- Configuration persistence
+    const backendUrlInput = document.getElementById('backendUrl');
+    const backendKeyInput = document.getElementById('backendKey');
+    const saveConfigBtn = document.getElementById('saveConfig');
+    const clearConfigBtn = document.getElementById('clearConfig');
+
+    function loadConfig(){
+      backendUrlInput.value = localStorage.getItem('ai_backend_url') || '';
+      backendKeyInput.value = localStorage.getItem('ai_backend_key') || '';
+    }
+    function saveConfig(){
+      localStorage.setItem('ai_backend_url', backendUrlInput.value.trim());
+      localStorage.setItem('ai_backend_key', backendKeyInput.value.trim());
+      alert('Configuration enregistrée.');
+    }
+    function clearConfig(){
+      if(confirm('Effacer la configuration locale ?')) {
+        localStorage.removeItem('ai_backend_url');
+        localStorage.removeItem('ai_backend_key');
+        backendUrlInput.value = ''; backendKeyInput.value = '';
+      }
+    }
+    saveConfigBtn.onclick = saveConfig;
+    clearConfigBtn.onclick = clearConfig;
+    loadConfig();
+
+    function getBackend(){
+      const url = backendUrlInput.value.trim() || localStorage.getItem('ai_backend_url') || '';
+      const key = backendKeyInput.value.trim() || localStorage.getItem('ai_backend_key') || '';
+      return { url, key };
+    }
+
+    // --- Utility: call backend if configured, else call local mock
+    async function callBackendOrMock(path, payload={}, method='POST'){
+      const backend = getBackend();
+      if(backend.url){
+        try{
+          const res = await fetch((backend.url.replace(/\/$/,'') + '/' + path.replace(/^\//,'')), {
+            method, headers: {
+              'Content-Type':'application/json',
+              ...(backend.key?{'Authorization': 'Bearer ' + backend.key}:{})
+            },
+            body: JSON.stringify(payload)
+          });
+          if(!res.ok) throw new Error('Erreur réseau: ' + res.status);
+          return await res.json();
+        }catch(err){
+          return { error: 'Échec appel backend : ' + err.message };
+        }
+      } else {
+        // call local mock implementation
+        return await mockDispatcher(path, payload);
+      }
+    }
+
+    // --- Mock dispatcher
+    async function mockDispatcher(path, payload){
+      // tiny simulated latency
+      await new Promise(r=>setTimeout(r, 350));
+      if(path.includes('tln/sentiment')) return { sentiment: mockSentiment(payload.text || '') };
+      if(path.includes('tln/summary')) return { summary: mockSummary(payload.text || '', payload.sentences || 2) };
+      if(path.includes('tln/translate')) return { translation: mockTranslate(payload.text || '', payload.target || 'fr') };
+      if(path.includes('tln/ner')) return { entities: mockNER(payload.text || '') };
+      if(path.includes('vo/describe')) return mockDescribeImage(payload);
+      if(path.includes('vo/objects')) return { objects: mockObjects(payload.imageName || '') };
+      if(path.includes('generate/text')) return { text: mockGenerateText(payload.prompt || '', payload.option || '') };
+      if(path.includes('generate/image')) return { imageDataUrl: mockGenerateImage(payload.prompt || '') };
+      if(path.includes('recommend/product')) return { recommendations: mockRecommendProduct(payload.query || '') };
+      if(path.includes('recommend/article')) return { recommendations: mockRecommendArticle(payload.query || '') };
+      return { error: 'Endpoint mock non supporté: ' + path };
+    }
+
+    // --- Mock implementations (basic, pour prototypage)
+    function mockSentiment(text){
+      const positives = ['bon','excellent','super','parfait','content','aime','heureux','bien','satisfait'];
+      const negatives = ['mauvais','nul','problème','déçu','erreur','lent','cher','risque'];
+      let score = 0;
+      const t = text.toLowerCase();
+      positives.forEach(w=>{ if(t.includes(w)) score += 1; });
+      negatives.forEach(w=>{ if(t.includes(w)) score -= 1; });
+      const label = score > 0 ? 'Positif' : score < 0 ? 'Négatif' : 'Neutre';
+      return { label, score, positives: score>0 ? positives.filter(w=>t.includes(w)) : [], negatives: score<0 ? negatives.filter(w=>t.includes(w)) : [] };
+    }
+
+    function mockSummary(text, sentences = 2){
+      if(!text) return '';
+      // naive: split on ., !, ?
+      const parts = text.match(/[^.!?]+[.!?]?/g) || [text];
+      return parts.slice(0, Math.max(1, Math.min(sentences, parts.length))).join(' ').trim();
+    }
+
+    function mockTranslate(text, target='fr'){
+      if(!text) return '';
+      return `${text} [traduit → ${target}]`;
+    }
+
+    function mockNER(text){
+      // naive: find capitalized words as 'PROPN', find emails, urls
+      const ents = [];
+      const emailRe = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/g;
+      const urlRe = /\bhttps?:\/\/[^\s]+/g;
+      (text.match(emailRe)||[]).forEach(m=>ents.push({ entity: m, label:'EMAIL' }));
+      (text.match(urlRe)||[]).forEach(m=>ents.push({ entity: m, label:'URL' }));
+      const words = text.split(/\s+/);
+      words.forEach(w=>{
+        if(/^[A-ZÉÈÀ][a-zàéèêîôûù'-]{2,}/.test(w)) ents.push({ entity: w.replace(/[.,;:!?)]$/,''), label:'PROPN' });
+      });
+      return ents;
+    }
+
+    // Vision mocks
+    function mockDescribeImage({ imageName, width, height, dominantColor } = {}){
+      return {
+        description: `Image '${imageName || 'non-nommée'}' - dimensions approximatives: ${width||'inconnues'} x ${height||'inconnues'}. Couleur dominante estimée: ${dominantColor || 'inconnue'}. Description mock générée.`,
+        imageName, width, height, dominantColor
+      };
+    }
+    function mockObjects(imageName=''){
+      // fake mapping by filename keywords
+      const map = [];
+      const name = imageName.toLowerCase();
+      if(name.includes('car') || name.includes('voiture')) map.push({label:'voiture', score:0.92});
+      if(name.includes('dog') || name.includes('chien')) map.push({label:'chien', score:0.95});
+      if(map.length===0) map.push({label:'objet indéterminé', score:0.45});
+      return map;
+    }
+
+    // Generation mock
+    function mockGenerateText(prompt='', option=''){
+      return `Génération (mock) — prompt: "${prompt}". Option: ${option}. Résultat: Ceci est un texte généré en mode démo.`;
+    }
+    function mockGenerateImage(prompt=''){
+      // create simple canvas image with prompt text and return dataURL
+      const canvas = document.createElement('canvas');
+      canvas.width = 800; canvas.height = 400;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#021826'; ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.fillStyle = '#06b6d4'; ctx.font = '20px Arial';
+      wrapText(ctx, 'Généré (mock): ' + prompt, 20, 40, 760, 24);
+      return canvas.toDataURL('image/png');
+    }
+    function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+      const words = text.split(' ');
+      let line = '';
+      for(let n=0;n<words.length;n++){
+        const testLine = line + words[n] + ' ';
+        const metrics = ctx.measureText(testLine);
+        if(metrics.width > maxWidth && n>0){
+          ctx.fillText(line, x, y);
+          line = words[n] + ' ';
+          y += lineHeight;
+        } else {
+          line = testLine;
+        }
+      }
+      ctx.fillText(line, x, y);
+    }
+
+    // Recommend mock
+    function mockRecommendProduct(query=''){
+      const q = query.toLowerCase();
+      if(q.includes('smartphone') || q.includes('phone')) return [{title:'Phone X - 128GB', price:'199€', reason:'bon rapport qualité/prix'}];
+      if(q.includes('sécurité') || q.includes('secure')) return [{title:'Service VPN Pro', price:'5€/mois', reason:'sécurité, logs minimaux'}];
+      return [{title:'Produit recommandé (mock)', price:'N/A', reason:'Basé sur la requête: '+query}];
+    }
+    function mockRecommendArticle(query=''){
+      return [{title:'Article: Introduction à NetSecurePro IA', url:'https://example.com/article', summary:'Résumé mock basé sur '+query}];
+    }
+
+    // --- UI wiring
+    // TLN
+    document.getElementById('tlnRun').onclick = async ()=>{
+      const text = document.getElementById('tlnText').value;
+      const action = document.getElementById('tlnAction').value;
+      const opt = document.getElementById('tlnOpt').value;
+      const out = document.getElementById('tlnResult');
+      out.textContent = 'Exécution...';
+      if(!text.trim()){ out.textContent = 'Entrer du texte pour analyser.'; return;}
+      let res;
+      if(action === 'sentiment'){
+        res = await callBackendOrMock('/tln/sentiment', { text });
+      } else if(action === 'summary'){
+        const sentences = parseInt(opt) || 2;
+        res = await callBackendOrMock('/tln/summary', { text, sentences });
+      } else if(action === 'translate'){
+        const target = (opt || 'fr').split(' ')[0];
+        res = await callBackendOrMock('/tln/translate', { text, target });
+      } else if(action === 'ner'){
+        res = await callBackendOrMock('/tln/ner', { text });
+      }
+      out.textContent = JSON.stringify(res, null, 2);
+    };
+    document.getElementById('tlnClear').onclick = ()=>{ document.getElementById('tlnText').value=''; document.getElementById('tlnResult').textContent='Résultat...'; };
+
+    // Vision: handle file
+    const imgFile = document.getElementById('imgFile');
+    const imgPreview = document.getElementById('imgPreview');
+    let loadedImageMeta = null;
+    imgFile.addEventListener('change', async (e)=>{
+      const f = e.target.files && e.target.files[0];
+      if(!f) { imgPreview.style.display='none'; loadedImageMeta=null; return; }
+      const url = URL.createObjectURL(f);
+      imgPreview.src = url;
+      imgPreview.style.display='block';
+      // compute metadata: dimensions + dominant color
+      const img = new Image();
+      img.src = url;
+      await img.decode();
+      const w = img.naturalWidth, h = img.naturalHeight;
+      // canvas to compute dominant color (simple average)
+      const canvas = document.createElement('canvas');
+      const scale = Math.min(200, w);
+      canvas.width = scale; canvas.height = Math.round(h * (scale / w));
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0,0, canvas.width, canvas.height);
+      const data = ctx.getImageData(0,0,canvas.width,canvas.height).data;
+      let r=0,g=0,b=0,c=0;
+      for(let i=0;i<data.length;i+=4){ r += data[i]; g += data[i+1]; b += data[i+2]; c++; }
+      r = Math.round(r/c); g = Math.round(g/c); b = Math.round(b/c);
+      const dom = `rgb(${r},${g},${b})`;
+      loadedImageMeta = { file:f, name:f.name, width:w, height:h, dominantColor:dom, dataUrl:url };
+    });
+
+    document.getElementById('voRun').onclick = async ()=>{
+      const action = document.getElementById('voAction').value;
+      const out = document.getElementById('voResult');
+      out.textContent = 'Exécution...';
+      if(!loadedImageMeta){ out.textContent = 'Charger une image d\'abord.'; return; }
+      let res;
+      if(action === 'describe'){
+        res = await callBackendOrMock('/vo/describe', { imageName: loadedImageMeta.name, width:loadedImageMeta.width, height:loadedImageMeta.height, dominantColor:loadedImageMeta.dominantColor });
+      } else if(action === 'objects'){
+        res = await callBackendOrMock('/vo/objects', { imageName: loadedImageMeta.name });
+      } else if(action === 'faces'){
+        // simple mock: detect face if filename contains 'face' or height/width ratio approx face? naive
+        const has = /face|portrait|visage/i.test(loadedImageMeta.name) ? [{box:[10,10,100,100],score:0.95}] : [];
+        res = { faces: has, note:'détection mock' };
+      }
+      out.textContent = JSON.stringify(res, null, 2);
+    };
+    document.getElementById('voClear').onclick = ()=>{ imgFile.value=''; imgPreview.style.display='none'; loadedImageMeta=null; document.getElementById('voResult').textContent='Résultat...'; };
+
+    // Generation
+    document.getElementById('genRun').onclick = async ()=>{
+      const prompt = document.getElementById('genPrompt').value;
+      const action = document.getElementById('genAction').value;
+      const opt = document.getElementById('genOpt').value;
+      const out = document.getElementById('genResult');
+      out.textContent = 'Exécution...';
+      if(!prompt.trim()){ out.textContent='Entrer un prompt.'; return; }
+      if(action === 'text'){
+        const res = await callBackendOrMock('/generate/text', { prompt, option:opt });
+        out.textContent = JSON.stringify(res, null, 2);
+      } else if(action === 'image'){
+        const res = await callBackendOrMock('/generate/image', { prompt, option:opt });
+        if(res.imageDataUrl){
+          out.innerHTML = '';
+          const img = document.createElement('img'); img.src = res.imageDataUrl; img.style.maxWidth='100%'; img.style.borderRadius='8px';
+          out.appendChild(img);
+          const a = document.createElement('a'); a.href = res.imageDataUrl; a.download = 'generated.png'; a.textContent='Télécharger l\'image'; a.style.display='inline-block'; a.style.marginTop='8px';
+          out.appendChild(a);
+        } else {
+          out.textContent = JSON.stringify(res, null, 2);
+        }
+      }
+    };
+    document.getElementById('genClear').onclick = ()=>{ document.getElementById('genPrompt').value=''; document.getElementById('genResult').textContent='Résultat...'; };
+
+    // Recommendation
+    document.getElementById('recRun').onclick = async ()=>{
+      const q = document.getElementById('recQuery').value;
+      const action = document.getElementById('recAction').value;
+      const out = document.getElementById('recResult');
+      out.textContent = 'Exécution...';
+      if(!q.trim()){ out.textContent='Entrer une requête.'; return; }
+      let res;
+      if(action === 'product'){
+        res = await callBackendOrMock('/recommend/product', { query:q });
+      } else {
+        res = await callBackendOrMock('/recommend/article', { query:q });
+      }
+      out.textContent = JSON.stringify(res, null, 2);
+    };
+
+    // --- helpful keyboard shortcuts (optional)
+    window.addEventListener('keydown', (e)=>{
+      if((e.ctrlKey||e.metaKey) && e.key === 'Enter'){
+        // run TLN by default
+        document.getElementById('tlnRun').click();
+      }
+    });
+
+    // Initialize result placeholders
+    document.getElementById('tlnResult').textContent = 'Résultat...';
+    document.getElementById('voResult').textContent = 'Résultat...';
+    document.getElementById('genResult').textContent = 'Résultat...';
+    document.getElementById('recResult').textContent = 'Résultat...';
+
+  </script>
+</body>
+</html>
