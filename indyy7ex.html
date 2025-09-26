@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SYSTEMEOSIA — Cockpit Cognitif</title>
+  <meta name="description" content="SYSTEMEOSIA — Cockpit Cognitif — interface interactive" />
+  <style>
+    :root{
+      --bg:#0f1724;
+      --card:#0b1220;
+      --accent:#7c3aed;
+      --muted:#98a0b3;
+      --glass: rgba(255,255,255,0.03);
+      --glass-2: rgba(255,255,255,0.02);
+      --radius:14px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,#071023 0%, #071827 60%);color:#e6eef8}
+    .wrap{max-width:1000px;margin:28px auto;padding:24px}
+    header{
+      display:flex;gap:16px;align-items:center;justify-content:space-between;
+      margin-bottom:18px;
+    }
+    .brand{
+      display:flex;gap:12px;align-items:center;
+    }
+    .logo{
+      width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#3b82f6);
+      display:grid;place-items:center;font-weight:700;font-size:18px;color:white;box-shadow:0 6px 18px rgba(0,0,0,0.6);
+    }
+    h1{margin:0;font-size:20px;letter-spacing:0.6px}
+    p.lead{margin:0;color:var(--muted);font-size:13px}
+    nav{display:flex;gap:8px;flex-wrap:wrap}
+    button.nav-btn{
+      background:var(--glass);border:1px solid rgba(255,255,255,0.03);padding:8px 12px;border-radius:10px;color:var(--muted);
+      cursor:pointer;font-weight:600;backdrop-filter: blur(6px);
+    }
+    button.nav-btn:hover{color:#fff;transform:translateY(-2px)}
+    .grid{display:grid;grid-template-columns:1fr 320px;gap:18px}
+    main{
+      background:linear-gradient(180deg,var(--card), rgba(10,14,20,0.8));
+      border-radius:var(--radius);padding:18px;border:1px solid rgba(255,255,255,0.02);
+      min-height:420px;
+    }
+    .panel{padding:14px;background:var(--glass-2);border-radius:12px;margin-bottom:12px}
+    .section-title{display:flex;align-items:center;gap:10px}
+    .section-title h2{margin:0;font-size:16px}
+    .kbd{background:rgba(255,255,255,0.03);padding:6px 8px;border-radius:8px;font-weight:700;color:var(--muted);font-size:13px}
+    .actions{display:flex;gap:10px;margin-top:12px}
+    .btn{
+      padding:10px 14px;border-radius:12px;border:0;background:linear-gradient(90deg,var(--accent),#06b6d4);
+      color:white;font-weight:700;cursor:pointer;box-shadow:0 8px 24px rgba(5,10,20,0.6);
+    }
+    .ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);font-weight:700}
+    aside{position:relative}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
+    .list{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+    .list a{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;text-decoration:none;color:var(--muted);background:transparent;border:1px solid transparent}
+    .list a:hover{background:rgba(255,255,255,0.015);color:#fff;}
+    .small{font-size:13px;color:var(--muted)}
+    .big-center{display:grid;place-items:center;padding:30px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent)}
+    footer{margin-top:18px;text-align:center;color:var(--muted);font-size:13px}
+    /* responsive */
+    @media (max-width:880px){
+      .grid{grid-template-columns:1fr; padding-bottom:40px}
+      aside{order:2}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap" role="application" aria-label="Cockpit Cognitif SYSTEMEOSIA">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true">SI</div>
+        <div>
+          <h1>SYSTEMEOSIA — Cockpit Cognitif</h1>
+          <p class="lead">Il ne force rien. Il est là.</p>
+        </div>
+      </div>
+
+      <nav aria-label="Navigation principale">
+        <button class="nav-btn" data-target="boot">0 BOOT</button>
+        <button class="nav-btn" data-target="core">1 CORE</button>
+        <button class="nav-btn" data-target="recognition">2 RECOGNITION</button>
+        <button class="nav-btn" data-target="vision">3 VISION</button>
+        <button class="nav-btn" data-target="logic">4 LOGIC</button>
+        <button class="nav-btn" data-target="qr">5 QR</button>
+        <button class="nav-btn" data-target="announce">6 ANNOUNCE</button>
+      </nav>
+    </header>
+
+    <div class="grid">
+      <main id="main">
+        <!-- Boot -->
+        <section id="boot" class="panel" aria-labelledby="boot-title">
+          <div class="section-title">
+            <h2 id="boot-title">0 — BOOT</h2>
+            <div class="kbd">etat: <span id="boot-state">offline</span></div>
+          </div>
+          <div style="margin-top:12px" class="big-center" id="boot-center">
+            <div>
+              <p style="margin:0 0 12px 0;text-align:center">Démarrage du Cockpit Cognitif.</p>
+              <div style="display:flex;gap:8px;justify-content:center">
+                <button class="btn" id="btn-boot">Lancer BOOT</button>
+                <button class="ghost" id="btn-reset">Réinitialiser</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Core -->
+        <section id="core" class="panel" aria-labelledby="core-title">
+          <div class="section-title">
+            <h2 id="core-title">1 — CORE</h2>
+            <div class="small">Moteur système, état des modules</div>
+          </div>
+          <div style="margin-top:12px" id="core-modules" class="card">
+            <div class="small">Modules détectés :</div>
+            <ul id="modules-list" class="small" style="margin:8px 0 0 18px;padding:0;">
+              <li>IA Kernel — <strong id="mod-ia">inactif</strong></li>
+              <li>Proxy Launcher — <strong id="mod-proxy">inactif</strong></li>
+              <li>USB Remote — <strong id="mod-usb">inactif</strong></li>
+            </ul>
+            <div class="actions">
+              <button class="btn" id="start-core">Activer CORE</button>
+              <button class="ghost" id="stop-core">Désactiver CORE</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Recognition -->
+        <section id="recognition" class="panel" aria-labelledby="rec-title">
+          <div class="section-title">
+            <h2 id="rec-title">2 — RECOGNITION</h2>
+            <div class="small">Analyse & identification</div>
+          </div>
+          <div style="margin-top:12px">
+            <textarea id="recognition-input" placeholder="Entrer une phrase à analyser..." style="width:100%;height:110px;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:inherit"></textarea>
+            <div style="margin-top:10px;display:flex;gap:8px">
+              <button class="btn" id="btn-recognize">Analyser</button>
+              <button class="ghost" id="btn-clear-rec">Vider</button>
+            </div>
+            <div id="recognition-output" style="margin-top:12px" class="card small">Résultat: <span id="rec-result">—</span></div>
+          </div>
+        </section>
+
+        <!-- Vision -->
+        <section id="vision" class="panel" aria-labelledby="vision-title">
+          <div class="section-title">
+            <h2 id="vision-title">3 — VISION</h2>
+            <div class="small">Flux visuel et capteurs</div>
+          </div>
+          <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div class="card">
+              <div class="small">Caméra (simulée)</div>
+              <div style="height:140px;border-radius:10px;margin-top:8px;background:linear-gradient(45deg,#021124,#061021);display:grid;place-items:center">
+                <div style="text-align:center;color:var(--muted)">Flux simulé</div>
+              </div>
+              <div style="margin-top:10px;display:flex;gap:8px">
+                <button class="btn" id="btn-vision-start">Démarrer Vision</button>
+                <button class="ghost" id="btn-vision-stop">Arrêter</button>
+              </div>
+            </div>
+            <div class="card">
+              <div class="small">Détections récentes</div>
+              <ul id="vision-log" style="margin:8px 0 0 18px;padding:0;color:var(--muted)"><li>Aucune détection</li></ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Logic -->
+        <section id="logic" class="panel" aria-labelledby="logic-title">
+          <div class="section-title">
+            <h2 id="logic-title">4 — LOGIC</h2>
+            <div class="small">Moteur logique et règles</div>
+          </div>
+          <div style="margin-top:12px" class="card">
+            <div class="small">Exécuter une règle :</div>
+            <input id="logic-input" placeholder="Nom de la règle (ex: analyse-rapide)" style="width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);margin-top:8px;background:transparent;color:inherit" />
+            <div style="margin-top:10px;display:flex;gap:8px">
+              <button class="btn" id="run-rule">Exécuter</button>
+              <button class="ghost" id="show-logs">Voir logs</button>
+            </div>
+            <pre id="logic-output" style="margin-top:12px;background:rgba(0,0,0,0.15);padding:10px;border-radius:10px;min-height:60px;color:var(--muted)">—</pre>
+          </div>
+        </section>
+
+        <!-- QR -->
+        <section id="qr" class="panel" aria-labelledby="qr-title">
+          <div class="section-title">
+            <h2 id="qr-title">5 — QR</h2>
+            <div class="small">Générer / partager</div>
+          </div>
+          <div style="margin-top:12px;display:flex;gap:12px;align-items:center">
+            <input id="qr-text" placeholder="Entrez une URL ou un texte..." style="flex:1;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:inherit" />
+            <button class="btn" id="btn-gen-qr">Générer QR</button>
+          </div>
+          <div style="margin-top:12px" id="qr-result" class="card big-center">
+            <div id="qr-image" aria-hidden="true">
+              <img alt="QR code" id="qr-img-tag" src="https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl=https://milyes.github.io/SYSTEME-ILYES/" style="width:200px;height:200px;border-radius:8px" />
+              <div class="small" style="margin-top:8px">QR par défaut vers SYSTEME-ILYES</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Announce -->
+        <section id="announce" class="panel" aria-labelledby="announce-title">
+          <div class="section-title">
+            <h2 id="announce-title">6 — ANNOUNCE</h2>
+            <div class="small">Diffuser une annonce</div>
+          </div>
+          <div style="margin-top:12px" class="card">
+            <textarea id="announce-text" placeholder="Message à annoncer..." style="width:100%;height:100px;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:inherit"></textarea>
+            <div style="margin-top:10px;display:flex;gap:8px">
+              <button class="btn" id="btn-announce">Diffuser</button>
+              <button class="ghost" id="btn-clear-ann">Effacer</button>
+            </div>
+            <div id="announce-log" style="margin-top:12px" class="small">Historique: <span id="announce-history">—</span></div>
+          </div>
+        </section>
+
+      </main>
+
+      <aside>
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div style="font-weight:800">État système</div>
+              <div class="small" id="sys-status">Inactif</div>
+            </div>
+            <div style="text-align:right">
+              <div class="small">v1.0</div>
+            </div>
+          </div>
+
+          <div class="list" style="margin-top:12px">
+            <a href="#" data-target="boot">0 BOOT</a>
+            <a href="#" data-target="core">1 CORE</a>
+            <a href="#" data-target="recognition">2 RECOGNITION</a>
+            <a href="#" data-target="vision">3 VISION</a>
+            <a href="#" data-target="logic">4 LOGIC</a>
+            <a href="#" data-target="qr">5 QR</a>
+            <a href="#" data-target="announce">6 ANNOUNCE</a>
+          </div>
+
+          <div style="margin-top:12px;display:flex;gap:8px">
+            <button class="btn" id="toggle-theme">Theme</button>
+            <button class="ghost" id="export-state">Exporter</button>
+          </div>
+
+          <div style="margin-top:12px" class="small">A propos: SYSTEMEOSIA — Cockpit Cognitif</div>
+        </div>
+      </aside>
+    </div>
+
+    <footer>
+      © <span id="year"></span> SYSTEMEOSIA — by Zoubirou Mohammed Ilyes
+    </footer>
+  </div>
+
+  <script>
+    // small helper utils
+    const q = s => document.querySelector(s);
+    const qa = s => Array.from(document.querySelectorAll(s));
+
+    // initial data
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Nav buttons and aside links
+    function scrollToSection(name){
+      const el = document.getElementById(name);
+      if(!el) return;
+      el.scrollIntoView({behavior:'smooth',block:'start'});
+    }
+    qa('[data-target]').forEach(btn=>{
+      btn.addEventListener('click', e=>{
+        const tgt = btn.getAttribute('data-target');
+        scrollToSection(tgt);
+      });
+    });
+
+    // Boot logic (simulé)
+    const bootState = q('#boot-state');
+    const sysStatus = q('#sys-status');
+    let isBooted = false;
+    q('#btn-boot').addEventListener('click', async ()=>{
+      q('#btn-boot').disabled = true;
+      bootState.textContent = 'démarrage...';
+      sysStatus.textContent = 'Démarrage du Cockpit...';
+      await new Promise(r=>setTimeout(r,1200));
+      isBooted = true;
+      bootState.textContent = 'online';
+      sysStatus.textContent = 'Système en ligne';
+      q('#mod-ia').textContent = 'actif';
+      q('#mod-proxy').textContent = 'actif';
+      q('#mod-usb').textContent = 'actif';
+      q('#btn-boot').disabled = false;
+    });
+
+    q('#btn-reset').addEventListener('click', ()=>{
+      isBooted = false;
+      bootState.textContent = 'offline';
+      sysStatus.textContent = 'Inactif';
+      q('#mod-ia').textContent = 'inactif';
+      q('#mod-proxy').textContent = 'inactif';
+      q('#mod-usb').textContent = 'inactif';
+    });
+
+    // Core activation buttons
+    q('#start-core').addEventListener('click', ()=>{
+      q('#mod-ia').textContent = 'actif';
+      q('#mod-proxy').textContent = 'actif';
+      sysStatus.textContent = 'CORE activé';
+    });
+    q('#stop-core').addEventListener('click', ()=>{
+      q('#mod-ia').textContent = 'inactif';
+      q('#mod-proxy').textContent = 'inactif';
+      sysStatus.textContent = 'CORE arrêté';
+    });
+
+    // Recognition (simulé)
+    q('#btn-recognize').addEventListener('click', ()=>{
+      const txt = q('#recognition-input').value.trim();
+      if(!txt){ q('#rec-result').textContent = 'Aucun texte fourni'; return; }
+      // naive "analyse"
+      const words = txt.split(/\s+/).length;
+      const hasQuestion = txt.includes('?');
+      q('#rec-result').textContent = `Mots: ${words} — Question:${hasQuestion ? 'oui' : 'non'}`;
+    });
+    q('#btn-clear-rec').addEventListener('click', ()=>{ q('#recognition-input').value=''; q('#rec-result').textContent='—'; });
+
+    // Vision (simulé)
+    q('#btn-vision-start').addEventListener('click', ()=>{
+      const ul = q('#vision-log'); ul.innerHTML = '';
+      const items = ['Objet: drone (faible)', 'Visage: inconnu', 'Signal: wifi détecté'];
+      items.forEach(it=>{
+        const li = document.createElement('li'); li.textContent = it; ul.appendChild(li);
+      });
+      sysStatus.textContent = 'Vision active';
+    });
+    q('#btn-vision-stop').addEventListener('click', ()=>{
+      q('#vision-log').innerHTML = '<li>Aucune détection</li>';
+      sysStatus.textContent = 'Vision arrêtée';
+    });
+
+    // Logic rules (simulé)
+    q('#run-rule').addEventListener('click', ()=>{
+      const r = q('#logic-input').value.trim();
+      if(!r){ q('#logic-output').textContent = 'Aucune règle fournie.'; return; }
+      q('#logic-output').textContent = `Exécution de la règle "${r}"...\nRésultat: OK (simulé) — ${new Date().toLocaleString()}`;
+    });
+    q('#show-logs').addEventListener('click', ()=>{
+      alert('Affichage des logs (simulé).');
+    });
+
+    // QR generation (utilise Google Charts QR API)
+    q('#btn-gen-qr').addEventListener('click', ()=>{
+      const txt = q('#qr-text').value.trim() || 'https://milyes.github.io/SYSTEME-ILYES/';
+      const safe = encodeURIComponent(txt);
+      const url = `https://chart.googleapis.com/chart?cht=qr&chs=280x280&chl=${safe}`;
+      q('#qr-img-tag').src = url;
+      q('#qr-img-tag').alt = 'QR code pour: ' + txt;
+    });
+
+    // Announce
+    q('#btn-announce').addEventListener('click', ()=>{
+      const msg = q('#announce-text').value.trim();
+      if(!msg) return alert('Entrez un message.');
+      const history = q('#announce-history');
+      const now = new Date().toLocaleString();
+      history.textContent = `${now}: ${msg}`;
+      q('#announce-text').value = '';
+      // visual feedback (simulé)
+      sysStatus.textContent = 'Annonce diffusée';
+    });
+    q('#btn-clear-ann').addEventListener('click', ()=>{ q('#announce-text').value=''; q('#announce-history').textContent='—'; });
+
+    // export state (simulé JSON)
+    q('#export-state').addEventListener('click', ()=>{
+      const state = {
+        boot: bootState.textContent,
+        modules: {
+          ia: q('#mod-ia').textContent,
+          proxy: q('#mod-proxy').textContent,
+          usb: q('#mod-usb').textContent
+        },
+        timestamp: new Date().toISOString()
+      };
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
+      const a = document.createElement('a'); a.href=dataStr; a.download='systeme_state.json'; document.body.appendChild(a); a.click(); a.remove();
+    });
+
+    // small theme toggle (invert)
+    q('#toggle-theme').addEventListener('click', ()=>{
+      document.documentElement.style.setProperty('--accent', getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() === '#7c3aed' ? '#06b6d4' : '#7c3aed');
+      // quick visual pulse
+      document.body.animate([{filter:'brightness(1.08)'},{filter:'brightness(1)'}],{duration:350});
+    });
+
+    // keyboard shortcuts (1..6 jump)
+    window.addEventListener('keydown', (e)=>{
+      if(e.key >= '0' && e.key <= '6'){
+        const map = { '0':'boot','1':'core','2':'recognition','3':'vision','4':'logic','5':'qr','6':'announce' };
+        const tgt = map[e.key];
+        if(tgt) scrollToSection(tgt);
+      }
+    });
+  </script>
+</body>
+</html>
