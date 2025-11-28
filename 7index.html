@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur d'Idées de Projet avec Gemini</title>
+    <!-- Chargement de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f7f7;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-8 bg-gray-50 min-h-screen">
+
+    <div class="max-w-4xl mx-auto bg-white shadow-xl rounded-xl p-6 md:p-10 border border-indigo-100">
+        <h1 class="text-3xl font-bold text-indigo-700 mb-2">✨ Créateur d'Idées de Projet</h1>
+        <p class="text-gray-600 mb-6">Utilisez la puissance de l'IA pour générer et affiner vos concepts de projet. (API Gemini)</p>
+
+        <!-- Zone d'édition de l'idée -->
+        <div class="mb-6">
+            <label for="ideaInput" class="block text-lg font-medium text-gray-700 mb-2">Votre Idée de Projet :</label>
+            <textarea id="ideaInput" rows="10" 
+                      class="w-full p-4 border border-gray-300 rounded-lg shadow-inner focus:ring-indigo-500 focus:border-indigo-500 transition duration-150"
+                      placeholder="Décrivez votre idée ici ou utilisez le bouton 'Générer' pour commencer.">Un réseau social pour les passionnés de plantes d'intérieur, permettant de suivre la croissance et d'échanger des conseils.</textarea>
+        </div>
+
+        <!-- Zone d'affichage des messages (chargement, erreur) -->
+        <div id="messageArea" class="mb-6 h-8 flex items-center">
+            <!-- Les messages d'état (chargement/erreur) apparaîtront ici -->
+        </div>
+
+        <!-- Boutons d'action LLM -->
+        <div class="flex flex-col sm:flex-row gap-4">
+            <button id="generateIdeaBtn" 
+                    class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-[1.01] focus:outline-none focus:ring-4 focus:ring-indigo-300">
+                ✨ Générer une Nouvelle Idée
+            </button>
+
+            <button id="refineIdeaBtn" 
+                    class="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-[1.01] focus:outline-none focus:ring-4 focus:ring-green-300">
+                ✨ Affiner l'Idée
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        const ideaInput = document.getElementById('ideaInput');
+        const generateIdeaBtn = document.getElementById('generateIdeaBtn');
+        const refineIdeaBtn = document.getElementById('refineIdeaBtn');
+        const messageArea = document.getElementById('messageArea');
+
+        // Laissez la clé API vide. Le runtime Canvas la fournira.
+        const apiKey = "";
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+        /**
+         * Affiche un message d'état (chargement, erreur, succès).
+         * @param {string} text Le texte du message.
+         * @param {string} type Le type de message ('loading', 'error', 'success').
+         */
+        function displayMessage(text, type = 'info') {
+            let color;
+            if (type === 'loading') {
+                color = 'text-indigo-500 animate-pulse';
+            } else if (type === 'error') {
+                color = 'text-red-600';
+            } else if (type === 'success') {
+                color = 'text-green-600';
+            } else {
+                color = 'text-gray-600';
+            }
+            messageArea.innerHTML = `<span class="${color} font-medium">${text}</span>`;
+        }
+
+        /**
+         * Fonction utilitaire pour appeler l'API Gemini avec backoff exponentiel.
+         * @param {string} userQuery La requête utilisateur.
+         * @param {string} systemPrompt L'instruction système pour guider le modèle.
+         * @param {number} maxRetries Le nombre maximal de tentatives de backoff.
+         * @returns {Promise<string|null>} Le texte généré ou null en cas d'échec.
+         */
+        async function callGeminiApi(userQuery, systemPrompt, maxRetries = 5) {
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+                // Pas de grounding pour les tâches de création/brainstorming
+            };
+
+            for (let attempt = 0; attempt < maxRetries; attempt++) {
+                const delay = Math.pow(2, attempt) * 1000 + Math.random() * 1000; // Backoff exponentiel + jitter
+                if (attempt > 0) {
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                }
+
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (response.status === 429 && attempt < maxRetries - 1) {
+                        // Gérer l'erreur de limitation de débit (Rate Limit)
+                        continue;
+                    }
+
+                    if (!response.ok) {
+                        throw new Error(`Erreur HTTP: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                    if (text) {
+                        return text;
+                    } else {
+                        throw new Error("Réponse API invalide ou vide.");
+                    }
+
+                } catch (error) {
+                    console.error(`Tentative ${attempt + 1} échouée:`, error.message);
+                    if (attempt === maxRetries - 1) {
+                        throw new Error("Échec de la récupération de la réponse Gemini après plusieurs tentatives.");
+                    }
+                }
+            }
+            return null; // Devrait être atteint uniquement si maxRetries > 0
+        }
+
+        /**
+         * Génère une idée de projet unique et la place dans le textarea.
+         */
+        async function generateProjectIdea() {
+            const userQuery = "Générer une nouvelle idée de projet unique pour un développeur full-stack.";
+            const systemPrompt = "Vous êtes un assistant créatif. Générez un concept de projet unique et hautement détaillé (comme une application web, un jeu ou un outil) en 100 mots ou moins. Le résultat doit être prêt à être utilisé comme base de projet.";
+
+            displayMessage("Chargement... l'IA génère une nouvelle idée de projet.", 'loading');
+            generateIdeaBtn.disabled = true;
+            refineIdeaBtn.disabled = true;
+
+            try {
+                const generatedText = await callGeminiApi(userQuery, systemPrompt);
+                if (generatedText) {
+                    ideaInput.value = generatedText.trim();
+                    displayMessage("Nouvelle idée générée avec succès!", 'success');
+                } else {
+                    displayMessage("Erreur : La génération de l'idée a échoué. Veuillez réessayer.", 'error');
+                }
+            } catch (error) {
+                console.error("Erreur de génération d'idée:", error);
+                displayMessage("Erreur critique : Impossible de contacter l'API Gemini.", 'error');
+            } finally {
+                generateIdeaBtn.disabled = false;
+                refineIdeaBtn.disabled = false;
+            }
+        }
+
+        /**
+         * Prend l'idée actuelle et la développe en une proposition détaillée.
+         */
+        async function refineCurrentIdea() {
+            const currentIdea = ideaInput.value.trim();
+            if (!currentIdea) {
+                displayMessage("Veuillez saisir une idée dans la zone de texte avant d'affiner.", 'error');
+                return;
+            }
+
+            const userQuery = `L'idée de projet actuelle est : "${currentIdea}". Veuillez l'étendre en une proposition détaillée structurée, incluant des sections pour le "Concept de Base", les "Fonctionnalités Clés" et la "Pile Technologique Potentielle".`;
+            const systemPrompt = "Vous êtes un chef de projet expert. Prenez l'idée de l'utilisateur et transformez-la en une proposition de projet bien structurée et détaillée. Ne créez pas de nouvelle idée. Utilisez des titres pour les sections : Concept de Base, Fonctionnalités Clés, Pile Technologique Potentielle.";
+
+            displayMessage("Chargement... l'IA affine et détaille votre idée.", 'loading');
+            generateIdeaBtn.disabled = true;
+            refineIdeaBtn.disabled = true;
+
+            try {
+                const refinedText = await callGeminiApi(userQuery, systemPrompt);
+                if (refinedText) {
+                    ideaInput.value = refinedText.trim();
+                    displayMessage("Idée affinée avec succès en une proposition complète!", 'success');
+                } else {
+                    displayMessage("Erreur : L'affinage de l'idée a échoué. Veuillez réessayer.", 'error');
+                }
+            } catch (error) {
+                console.error("Erreur d'affinage d'idée:", error);
+                displayMessage("Erreur critique : Impossible de contacter l'API Gemini.", 'error');
+            } finally {
+                generateIdeaBtn.disabled = false;
+                refineIdeaBtn.disabled = false;
+            }
+        }
+
+        // Événements des boutons
+        generateIdeaBtn.addEventListener('click', generateProjectIdea);
+        refineIdeaBtn.addEventListener('click', refineCurrentIdea);
+
+    </script>
+</body>
+</html>
